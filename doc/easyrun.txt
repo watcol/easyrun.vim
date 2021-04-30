@@ -1,0 +1,75 @@
+*easyrun.txt*
+                                                                    *easyrun*
+           ---------------------------------------------------
+             Simple task runner using vim's terminal feature
+           ---------------------------------------------------
+
+Author: watcol <potfman@gmail.com>
+Repository: https://github.com/watcol/easyrun.vim
+License: MIT
+
+=============================================================================
+CONTENTS                                                   *easyrun-contents*
+
+  1. Introduction                                      |easyrun-introduction|
+  2. Requirements                                      |easyrun-requirements|
+  3. Installation                                      |easyrun-installation|
+  4. Usage                                                         |:EasyRun|
+  5. Configuration                                    |easyrun-configuration|
+
+=============================================================================
+INTRODUCTION                                           *easyrun-introduction*
+
+easyrun.vim is a simple task runner using |:terminal|.
+
+* Lightweight plugin.
+* Easy to run command.
+* Flexible configuration.
+
+=============================================================================
+REQUIREMENTS                                           *easyrun-requirements*
+
+easyrun.vim requires Vim or Neovim with terminal feature.
+
+=============================================================================
+INSTALLATION                                           *easyrun-installation*
+
+Vundle: add below to .vimrc:
+>
+  Plugin 'watcol/easyrun.vim'
+<
+Run :PluginInstall
+
+vim-plug: add below to .vimrc:
+>
+  Plug 'watcol/easyrun.vim'
+<
+Run :PlugInstall
+
+dein.vim: add below to .vimrc:
+>
+  call dein#add('watcol/easyrun.vim')
+<
+or add below to dein.toml:
+>
+  [[plugins]]
+  repo = 'watcol/easyrun.vim'
+<
+Run :call dein#install()
+
+=============================================================================
+USAGE                                                               *EasyRun*
+
+Open a file and do |:EasyRun|.
+Then the terminal window appears and outputs results.
+
+You can pass any arguments:
+>
+  :EasyEun foo bar
+<
+
+=============================================================================
+CONFIGURATION                                         *easyrun-configuration*
+
+=============================================================================
+vim:tw=78:ts=8:ft=help:norl:noet:fen:fdl=0:
