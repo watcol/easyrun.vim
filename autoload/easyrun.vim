@@ -1,5 +1,6 @@
 let s:commands = {
-\ 'python': 'python %f',
+\ 'python': ['python %o %f %a'],
+\ 'c': ['gcc %o -o %r %f', './%r %a']
 \}
 
 let s:position = "top"
@@ -8,6 +9,14 @@ let s:height = 20
 let s:width = 50
 
 function easyrun#run(...)
+  if !has('terminal')
+    redraw
+    echohl WarningMsg
+    echomsg "+terminal feature is needed."
+    echohl None
+    return
+  endif
+
   let s:ft = &filetype
   if !has_key(s:commands, s:ft)
     redraw
@@ -17,7 +26,25 @@ function easyrun#run(...)
     return
   endif
 
-  let s:cmd = substitute(get(s:commands, s:ft), "%f", expand("%"), "g")
+  let s:args = { "args":[], "opts": [] }
+  for arg in a:000
+    if arg[0] == '+'
+      call add(s:args.opts, arg[1:])
+    else
+      call add(s:args.args, arg)
+    endif
+  endfor
+
+  let s:cmd = join(s:commands[s:ft], ' && ')
+  let s:cmd = substitute(s:cmd, "%f", expand("%"), "g")
+  let s:cmd = substitute(s:cmd, "%r", expand("%:r"), "g")
+  let s:cmd = substitute(s:cmd, "%o", join(s:args.opts), "g")
+  let s:cmd = substitute(s:cmd, "%a", join(s:args.args), "g")
+  if has('win32') || has('win64')
+    let s:cmd = "cmd.exe /c (" . s:cmd . ")"
+  else
+    let s:cmd = "sh -c \"" . s:cmd . "\""
+  endif
 
   let s:prefix = ""
   let s:pos = get(s:, "position", "bottom")
@@ -52,7 +79,7 @@ function easyrun#run(...)
     set splitbelow
   endif
 
-  execute s:prefix . "terminal " . s:opts . s:cmd . " " . join(a:000)
+  execute s:prefix . "terminal " . s:opts . s:cmd
   if !get(s:, "focus", 0)
     wincmd p
   endif

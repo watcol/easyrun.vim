@@ -65,9 +65,12 @@ Then the terminal window appears and outputs results.
 
 You can pass any arguments:
 >
-  :EasyEun foo bar
+  :EasyRun foo bar
 <
-
+Compiler (or interpreter) options can passed with "+" prefix:
+>
+  :EasyRun +-Wall +-std=c11 foo
+<
 =============================================================================
 CONFIGURATION                                         *easyrun-configuration*
 
