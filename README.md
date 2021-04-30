@@ -29,6 +29,7 @@ repo = 'watcol/easyrun.vim'
 ```
 
 ## Supported Filetypes
+- C
 - Python
 
 ## Usage
