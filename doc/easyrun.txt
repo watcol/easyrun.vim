@@ -74,6 +74,43 @@ Compiler (or interpreter) options can passed with "+" prefix:
 =============================================================================
 CONFIGURATION                                         *easyrun-configuration*
 
+                                                            *g:easyrun_types*
+g:easyrun_types
+  The command type like "gcc", "python", etc..., specified on each filetype
+  by dictionary.
+
+  Default: See |README.md#supported_languages|.
+
+  Example:
+>
+    let g:easyrun_types = {
+    \ 'c': 'clang',
+    \ 'python': 'python2',
+    \}
+<
+
+                                                         *g:easyrun_commands*
+g:easyrun_commands
+  The format for executed commands by list.
+  These symbols are prepared:
+
+  Symbol     Result ~
+  --------   ------
+  %a         Script's arguments.
+  %o         Compiler (or interpreter)'s options.
+  %f         The filename for current buffer.
+  %r         The filename for current buffer without extension.
+
+  Default: See |README.md#supported_languages|.
+
+  Example:
+>
+    let g:easyrun_commands = {
+    \ 'gcc': ['gcc %o -o %r %f', './%r %a'],
+    \ 'python': ['python %o %f %a'],
+    \}
+<
+
                                                          *g:easyrun_position*
 g:easyrun_position
   The position to show results. Allowed values are "left", "right", "top",

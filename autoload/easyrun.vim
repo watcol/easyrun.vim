@@ -1,14 +1,23 @@
-let s:commands = {
-\ 'python': ['python %o %f %a'],
-\ 'c': ['gcc %o -o %r %f', './%r %a']
+let s:is_win = has('win32') || has('win64')
+
+let s:types = {
+\ 'c': 'gcc',
+\ 'python': 'python',
 \}
+
+call extend(s:types, get(g:, "easyrun_types", {}))
+
+let s:commands = {
+\ 'gcc': ['gcc %o -o %r %f', './%r %a'],
+\ 'python': ['python %o %f %a'],
+\}
+
+call extend(s:commands, get(g:, "easyrun_commands", {}))
 
 let s:position = get(g:, "easyrun_position", "bottom")
 let s:focus = get(g:, "easyrun_focus", 0)
 let s:height = get(g:, "easyrun_height", 0)
 let s:width = get(g:, "easyrun_width", 0)
-
-let s:is_win = has('win32') || has('win64')
 
 function s:parse_args(list)
   let args = { "args":[], "opts": [] }
@@ -23,7 +32,7 @@ function s:parse_args(list)
 endfunction
 
 function s:validate()
-  if !has('terminal')
+  if !has('terminal') && !has('nvim')
     redraw
     echohl WarningMsg
     echomsg "+terminal feature is needed."
@@ -32,10 +41,19 @@ function s:validate()
   endif
 
   let ft = &filetype
-  if !has_key(s:commands, ft)
+  if !has_key(s:types, ft)
     redraw
     echohl WarningMsg
     echomsg "Filetype \"" . ft . "\" is not supported."
+    echohl None
+    return 1
+  endif
+
+  let type = s:types[ft]
+  if !has_key(s:commands, type)
+    redraw
+    echohl WarningMsg
+    echomsg "Command type \"" . type . "\" not found."
     echohl None
     return 1
   endif
@@ -52,7 +70,7 @@ function s:validate()
 endfunction
 
 function s:command(args, opts)
-  let cmd = join(s:commands[&filetype], ' && ')
+  let cmd = join(s:commands[s:types[&filetype]], ' && ')
   let cmd = substitute(cmd, "%f", expand("%"), "g")
   let cmd = substitute(cmd, "%r", expand("%:r"), "g")
   let cmd = substitute(cmd, "%a", join(a:args), "g")
