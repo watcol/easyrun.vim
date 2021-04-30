@@ -3,4 +3,4 @@ if exists('g:easyrun_loaded')
 endif
 let g:easyrun_loaded = 1
 
-command! -nargs=* -complete=arglist EasyRun call easyrun#run(<f-args>)
+command! -nargs=* -complete=file EasyRun call easyrun#run(<f-args>)
