@@ -74,40 +74,31 @@ Compiler (or interpreter) options can passed with "+" prefix:
 =============================================================================
 CONFIGURATION                                         *easyrun-configuration*
 
+                                                           *g:easyrun_config*
+g:easyrun_config
+  |WIP|
+
                                                             *g:easyrun_types*
 g:easyrun_types
-  The command type like "gcc", "python", etc..., specified on each filetype
-  by dictionary.
-
-  Default: See |README.md#supported_languages|.
-
-  Example:
->
-    let g:easyrun_types = {
-    \ 'c': 'clang',
-    \ 'python': 'python2',
-    \}
-<
-
-                                                         *g:easyrun_commands*
-g:easyrun_commands
-  The format for executed commands by list.
+  The format template for executed commands by list. The contents are used
+  by |g:easyrun_config|'s 'type' field.
   These symbols are prepared:
 
   Symbol     Result ~
   --------   ------
+  %c         Command name
   %a         Script's arguments.
   %o         Compiler (or interpreter)'s options.
   %f         The filename for current buffer.
   %r         The filename for current buffer without extension.
 
-  Default: See |README.md#supported_languages|.
+  Default: See |autoload/easyrun.vim|.
 
   Example:
 >
-    let g:easyrun_commands = {
-    \ 'gcc': ['gcc %o -o %r %f', './%r %a'],
-    \ 'python': ['python %o %f %a'],
+    let g:easyrun_types = {
+    \ 'script': ['%c %o %f %a'],
+    \ 'cc': ['%c %o -o %r %f', './%r %a'],
     \}
 <
 
