@@ -1,14 +1,94 @@
 let s:is_win = has('win32') || has('win64')
 
 let s:types = {
-\ 'c': 'gcc',
+\ 'awk': 'awk',
+\ 'bash': 'bash',
+\ 'c': s:is_win && executable('cl') ? 'vc'    :
+\      executable('clang')          ? 'clang' :
+\      executable('gcc')            ? 'gcc'   :
+\      executable('tcc')            ? 'tcc'   : 'cc',
+\ 'cpp': s:is_win && executable('cl') ? 'vc'      :
+\        executable('clang++')        ? 'clang++' :
+\        executable('g++')            ? 'g++'     : 'c++',
+\ 'clojure': executable('jark') ? 'jark' : 'clojure',
+\ 'cs':  filereadable(expand('*.csproj')) ? 'dotnet' :
+\        executable('csc')                ? 'csc' :
+\        executable('mcs')                ? 'mcs' : '',
+\ 'coffee': 'coffee',
+\ 'crystal': 'crystal',
+\ 'd': executable('rdmd') ? 'rdmd' :
+\      executable('ldc')  ? 'ldc'  :
+\      executable('gdc')  ? 'gdc'  : '',
+\ 'dart': 'dart',
+\ 'dosbatch': 'dosbatch',
+\ 'elixir': 'elixir',
+\ 'erlang': 'erlang',
+\ 'fish': 'fish',
+\ 'fortran': 'gfortran',
+\ 'fsharp': filereadable(expand('*.fsproj')) ? 'dotnet' :
+\           executable('fsc')                ? 'fsc' :
+\           executable('fsharpc')            ? 'fsharpc' : '',
+\ 'go': 'go',
+\ 'groovy': 'groovy',
 \ 'python': 'python',
 \}
 
 call extend(s:types, get(g:, "easyrun_types", {}))
 
 let s:commands = {
-\ 'gcc': ['gcc %o -o %r %f', './%r %a'],
+\ 'awk': ['awk %o %f %a'],
+\ 'gawk': ['gawk %o %f %a'],
+\ 'mawk': ['mawk %o %f %a'],
+\ 'nawk': ['nawk %o %f %a'],
+\ 'bash': ['bash %o %f %a'],
+\ 'vc': ['cl %o %f /nologo /Fo%r.obj /Fe%r.exe > nul', './%r.exe %a'],
+\ 'gcc': s:is_win
+\          ? ['gcc %o -o %r.exe %f', './%r.exe %a']
+\          : ['gcc %o -o %r %f', './%r %a'],
+\ 'gcc-cat-asm': ['gcc %o -S -o %r.s %f', 'cat %r.s'],
+\ 'clang': s:is_win
+\          ? ['clang %o -o %r.exe %f', './%r.exe %a']
+\          : ['clang %o -o %r %f', './%r %a'],
+\ 'clang-cat-asm': ['clang %o -S -o %r.s %f', 'cat %r.s'],
+\ 'clang-cat-ir': ['clang %o -S -emit-llvm -o %r.ll %f', 'cat %r.ll'],
+\ 'tcc': s:is_win
+\          ? ['tcc %o -o %r.exe %f', './%r.exe %a']
+\          : ['tcc %o -o %r %f', './%r %a'],
+\ 'cc': s:is_win
+\          ? ['cc %o -o %r.exe %f', './%r.exe %a']
+\          : ['cc %o -o %r %f', './%r %a'],
+\ 'g++': s:is_win
+\          ? ['g++ %o -o %r.exe %f', './%r.exe %a']
+\          : ['g++ %o -o %r %f', './%r %a'],
+\ 'g++-cat-asm': ['g++ %o -S -o %r.s %f', 'cat %r.s'],
+\ 'clang++': s:is_win
+\          ? ['clang++ %o -o %r.exe %f', './%r.exe %a']
+\          : ['clang++ %o -o %r %f', './%r %a'],
+\ 'clang++-cat-asm': ['clang++ %o -S -o %r.s %f', 'cat %r.s'],
+\ 'clang++-cat-ir': ['clang++ %o -S -emit-llvm -o %r.ll %f', 'cat %r.ll'],
+\ 'c++': s:is_win
+\          ? ['c++ %o -o %r.exe %f', './%r.exe %a']
+\          : ['c++ %o -o %r %f', './%r %a'],
+\ 'jark': ['jark ns load %f'],
+\ 'clojure': ['clojure %o %f %a'],
+\ 'coffee': ['coffee %o %f %a'],
+\ 'dotnet': ['dotnet run %o -- %a'],
+\ 'csc': ['csc %o /nologo /out:%r.exe', './%r.exe %a'],
+\ 'mcs': ['mcs %o -out:%r.exe', 'mono %r.exe %a'],
+\ 'crystal': ['crystal run %o %f -- %a'],
+\ 'rdmd': ['rdmd %o %f %a'],
+\ 'ldc': ['ldc %o -o %r %f', './%r %a'],
+\ 'gdc': ['gdc %o -o %r %f', './%r %a'],
+\ 'dart': ['dart %o %f %a'],
+\ 'dosbatch': ['cmd %o /c %f %a'],
+\ 'elixir': ['elixir %o %f %a'],
+\ 'erlang': ['escript %o %f %a'],
+\ 'fish': ['fish %o %f %a'],
+\ 'gfortran': ['gfortran %o -o %r %f', './%r %a'],
+\ 'fsc': ['fsc %o /nologo /out:%r.exe', './%r.exe %a'],
+\ 'fsharpc': ['fsharpc %o -out:%r.exe', 'mono %r.exe %a'],
+\ 'go': ['go run %o %f -- %a'],
+\ 'groovy': ['groovy %o %f %a'],
 \ 'python': ['python %o %f %a'],
 \}
 

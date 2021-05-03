@@ -29,7 +29,49 @@ repo = 'watcol/easyrun.vim'
 ```
 
 ## Supported Filetypes
+- AWK
+  - awk
+  - gawk (GNU awk)
+  - mawk
+  - nawk
+- Bash
 - C
+  - Visual C
+  - GCC
+  - Clang
+  - Tiny C Compiler
+  - cc
+- C++
+  - Visual C++
+  - GCC (g++)
+  - Clang++
+  - c++
+- Clojure
+  - Jark
+  - Clojure CLI
+- C#
+  - .NET
+  - .NET Framework
+  - Mono
+- CoffeeScript
+- Crystal
+- D
+  - DMD
+  - LDC
+  - GDC
+- Dart
+- DOS Batch File
+- Elixir
+- Erlang
+- Fish shell
+- Fortran
+  - GFortran
+- F#
+  - .NET
+  - .NET Framework
+  - Mono
+- Go
+- Groovy
 - Python
 
 ## Usage
