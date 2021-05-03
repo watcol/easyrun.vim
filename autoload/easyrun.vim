@@ -2,6 +2,19 @@ let s:is_win = has('win32') || has('win64')
 
 let s:types = {
 \ 'awk': 'awk',
+\ 'asm': s:is_win && executable('ml')                ? 'ml'        :
+\        s:is_win && executable('ml64')              ? 'ml64'      :
+\        executable('yasm') && executable('lld')     ? 'yasm-lld'  :
+\        executable('yasm') && executable('ld')      ? 'yasm-ld'   :
+\        executable('yasm') && executable('ld.gold') ? 'yasm-gold' :
+\        executable('nasm') && executable('lld')     ? 'nasm-lld'  :
+\        executable('nasm') && executable('ld')      ? 'nasm-ld'   :
+\        executable('nasm') && executable('ld.gold') ? 'nasm-gold' :
+\        executable('clang')                         ? 'clang'     :
+\        executable('gcc')                           ? 'gcc'       :
+\        executable('as')   && executable('lld')     ? 'as-lld'    :
+\        executable('as')   && executable('ld')      ? 'as-ld'     :
+\        executable('as')   && executable('ld.gold') ? 'as-gold'   : '',
 \ 'bash': 'bash',
 \ 'c': s:is_win && executable('cl') ? 'vc'    :
 \      executable('clang')          ? 'clang' :
@@ -37,6 +50,35 @@ call extend(s:types, get(g:, "easyrun_types", {}))
 
 let s:commands = {
 \ 'awk': ['awk %o %f %a'],
+\ 'ml': ['ml %o %f /nologo /Fo%r.obj /Fe%r.exe > nul', './%r.exe %a'],
+\ 'ml64': ['ml64 %o %f /nologo /Fo%r.obj /Fe%r.exe > nul', './%r.exe %a'],
+\ 'yasm-lld': s:is_win
+\               ? ['yasm -o %r.o %f', 'ld.lld %o -o %r.exe %r.o', './%r.exe %a']
+\               : ['yasm -o %r.o %f', 'ld.lld %o -o %r %r.o', './%r %a'],
+\ 'yasm-ld': s:is_win
+\               ? ['yasm -o %r.o %f', 'ld %o -o %r.exe %r.o', './%r.exe %a']
+\               : ['yasm -o %r.o %f', 'ld %o -o %r %r.o', './%r %a'],
+\ 'yasm-gold': s:is_win
+\               ? ['yasm -o %r.o %f', 'ld.gold %o -o %r.exe %r.o', './%r.exe %a']
+\               : ['yasm -o %r.o %f', 'ld.gold %o -o %r %r.o', './%r %a'],
+\ 'nasm-lld': s:is_win
+\               ? ['nasm -o %r.o %f', 'ld.lld %o -o %r.exe %r.o', './%r.exe %a']
+\               : ['nasm -o %r.o %f', 'ld.lld %o -o %r %r.o', './%r %a'],
+\ 'nasm-ld': s:is_win
+\               ? ['nasm -o %r.o %f', 'ld %o -o %r.exe %r.o', './%r.exe %a']
+\               : ['nasm -o %r.o %f', 'ld %o -o %r %r.o', './%r %a'],
+\ 'nasm-gold': s:is_win
+\               ? ['nasm -o %r.o %f', 'ld.gold %o -o %r.exe %r.o', './%r.exe %a']
+\               : ['nasm -o %r.o %f', 'ld.gold %o -o %r %r.o', './%r %a'],
+\ 'as-lld': s:is_win
+\               ? ['as -o %r.o %f', 'ld.lld %o -o %r.exe %r.o', './%r.exe %a']
+\               : ['as -o %r.o %f', 'ld.lld %o -o %r %r.o', './%r %a'],
+\ 'as-ld': s:is_win
+\               ? ['as -o %r.o %f', 'ld %o -o %r.exe %r.o', './%r.exe %a']
+\               : ['as -o %r.o %f', 'ld %o -o %r %r.o', './%r %a'],
+\ 'as-gold': s:is_win
+\               ? ['as -o %r.o %f', 'ld.gold %o -o %r.exe %r.o', './%r.exe %a']
+\               : ['as -o %r.o %f', 'ld.gold %o -o %r %r.o', './%r %a'],
 \ 'gawk': ['gawk %o %f %a'],
 \ 'mawk': ['mawk %o %f %a'],
 \ 'nawk': ['nawk %o %f %a'],
@@ -121,7 +163,7 @@ function s:validate()
   endif
 
   let ft = &filetype
-  if !has_key(s:types, ft)
+  if get(s:types, ft, '') == ''
     redraw
     echohl WarningMsg
     echomsg "Filetype \"" . ft . "\" is not supported."

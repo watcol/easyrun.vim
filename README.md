@@ -34,6 +34,16 @@ repo = 'watcol/easyrun.vim'
   - gawk (GNU awk)
   - mawk
   - nawk
+- Assembly
+  - MASM32
+  - MASM
+  - Yasm
+  - NASM
+  - GCC
+  - as (GNU Assembler)
+  - LLD *(linker)*
+  - ld (GNU linker) *(linker)*
+  - GNU Gold *(linker)*
 - Bash
 - C
   - Visual C
