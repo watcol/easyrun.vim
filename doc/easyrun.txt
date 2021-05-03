@@ -100,9 +100,17 @@ g:easyrun_types
   --------   ------
   %c         Command name
   %a         Script's arguments.
+  %A         Script's arguments (each surrounded by doublequotes)
   %o         Compiler (or interpreter)'s options.
+  %A         Compiler (or interpreter)'s options. (each surrounded by doublequotes)
   %f         The filename for current buffer.
+  %F         The filename for current buffer. (full path)
   %r         The filename for current buffer without extension.
+  %R         The filename for current buffer without extension. (full path)
+  %h         The directory for current buffer.
+  %H         The directory for current buffer. (full path)
+  %t         The filename without directory path.
+  %T         The filename without directory path and extensions.
 
   Default: See |autoload/easyrun.vim|.
 

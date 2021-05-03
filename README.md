@@ -89,6 +89,9 @@ repo = 'watcol/easyrun.vim'
   - Stack
   - RunGHC
   - GHC
+- Idris
+- IO
+- Java
 - Python
 
 **NOTE: If there are multiple tools in one language, upper tools has higer priority.**

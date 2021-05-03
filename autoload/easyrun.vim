@@ -12,7 +12,7 @@ let s:types = {
 \ 'link': s:is_win
 \         ? ['%c %o -o %r.o %f', s:linker . ' %o -o %r.exe', './%r.exe %a']
 \         : ['%c %o -o %r.o %f', s:linker . ' %o -o %r', './%r %a'],
-\ 'vc': ['%c %o %f /nologo /Fo$r.obj /Fe%r.exe > nul', ''],
+\ 'vc': ['%c %o %f /nologo /Fo%r.obj /Fe%r.exe > nul', ''],
 \ 'dotnet-framework': ['%c %o /nologo /out:%r.exe', './%r.exe %a'],
 \ 'mono': ['%c %o -out:%r.exe', 'mono %r.exe %a'],
 \}
@@ -84,6 +84,9 @@ let s:commands = {
 \   {'cmd': 'runghc', 'type': 'script'},
 \   {'cmd': 'ghc',    'type': 'cc'},
 \ ],
+\ 'idris': [{'cmd': 'idris', 'type': 'cc'}],
+\ 'io': [{'cmd': 'io', 'type': 'script'}],
+\ 'java': [{'cmd': 'java', 'type': ['%cc %o -d %h %f', '%c -cp %h %T']}],
 \ 'python': [{'cmd': 'python', 'type': 'script'}],
 \}
 
@@ -192,12 +195,35 @@ function s:command(args, opts)
   if type(t) == 1
     let t = s:types[t]
   endif
+
+  let ignorecase = &ignorecase
+  set noignorecase
   let cmd = join(t, ' && ')
   let cmd = substitute(cmd, "%c", conf.cmd, "g")
   let cmd = substitute(cmd, "%f", expand("%"), "g")
+  let cmd = substitute(cmd, "%F", expand("%:p"), "g")
   let cmd = substitute(cmd, "%r", expand("%:r"), "g")
+  let cmd = substitute(cmd, "%R", expand("%:p:r"), "g")
+  let cmd = substitute(cmd, "%h", expand("%:h"), "g")
+  let cmd = substitute(cmd, "%H", expand("%:p:h"), "g")
+  let cmd = substitute(cmd, "%t", expand("%:t"), "g")
+  let cmd = substitute(cmd, "%T", expand("%:t:r"), "g")
+  let qargs = []
+  for a in a:args
+    call add(qargs, "\"" . substitute(a, "\"", "\\\"", "g") . "\"")
+  endfor
+  let qopts = []
+  for o in a:opts
+    call add(qopts, "\"" . substitute(o, "\"", "\\\"", "g") . "\"")
+  endfor
   let cmd = substitute(cmd, "%a", join(a:args), "g")
+  let cmd = substitute(cmd, "%A", join(qargs), "g")
   let cmd = substitute(cmd, "%o", join(a:opts), "g")
+  let cmd = substitute(cmd, "%O", join(qopts), "g")
+
+  if ignorecase
+    set ignorecase
+  endif
 
   if s:is_win
     let cmd = "cmd.exe /c (" . cmd . ")"
