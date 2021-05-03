@@ -45,8 +45,8 @@ let s:types = {
 \       executable('tinygo') ? 'tinygo' :
 \       executable('gccgo')  ? 'gccgo'  : '',
 \ 'groovy': executable('groovy') ? 'groovy' : '',
-\ 'haskell' !empty(findfile('stack.yaml', '.;')) ? 'stack' :
-\           executable('runghc')                 ? 'runghc' : '',
+\ 'haskell': !empty(findfile('stack.yaml', '.;')) ? 'stack' :
+\            executable('runghc')                 ? 'runghc' : '',
 \ 'python': executable('python') ? 'python' : '',
 \}
 
