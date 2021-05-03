@@ -13,15 +13,13 @@ let s:types = {
 \         ? ['%c %o -o %r.o %f', s:linker . ' %o -o %r.exe', './%r.exe %a']
 \         : ['%c %o -o %r.o %f', s:linker . ' %o -o %r', './%r %a'],
 \ 'vc': ['%c %o %f /nologo /Fo$r.obj /Fe%r.exe > nul', ''],
-\ 'jark': ['%c ns load %f'],
 \ 'dotnet-framework': ['%c %o /nologo /out:%r.exe', './%r.exe %a'],
 \ 'mono': ['%c %o -out:%r.exe', 'mono %r.exe %a'],
-\ 'batch': ['%c %o /c %f %a'],
 \}
 
 call extend(s:types, get(g:, "easyrun_types", {}))
 
-let s:config = {
+let s:commands = {
 \ 'awk': [{'cmd': 'awk', 'type': 'script'}],
 \ 'asm': [
 \   {'cmd': 'ml64', 'type': 'vc'},
@@ -48,7 +46,7 @@ let s:config = {
 \   {'cmd': 'c++',     'type': 'cc'},
 \ ],
 \ 'clojure': [
-\   {'cmd': 'jark',    'type': 'jark'},
+\   {'cmd': 'jark',    'type': ['%c ns load %f']},
 \   {'cmd': 'clojure', 'type': 'script'},
 \ ],
 \ 'cs': [
@@ -65,7 +63,7 @@ let s:config = {
 \   {'cmd': 'gdc',  'type': 'cc'},
 \ ],
 \ 'dart': [{'cmd': 'dart', 'type': 'script'}],
-\ 'dosbatch': [{'cmd': 'cmd', 'type': 'batch'}],
+\ 'dosbatch': [{'cmd': 'cmd', 'type': ['%c %o /c %f %a']}],
 \ 'elixir': [{'cmd': 'elixir', 'type': 'script'}],
 \ 'erlang': [{'cmd': 'escript', 'type': 'script'}],
 \ 'fish': [{'cmd': 'fish', 'type': 'script'}],
@@ -88,6 +86,41 @@ let s:config = {
 \ ],
 \ 'python': [{'cmd': 'python', 'type': 'script'}],
 \}
+
+for k in keys(get(g:, 'easyrun_commands', {}))
+  let v = g:easyrun[k]
+  let t = type(v)
+  let conf = []
+  if t == 1
+    let orig = get(s:commands, k, [])
+    let conf = [{'cmd': v, 'type': get(orig, -1, 'script')}]
+    for i in orig
+      if i.cmd == v
+        let conf[-1].type = i.type
+        break
+      endif
+    endfor
+  elseif t == 3
+    for c in v
+      if type(c) == 1
+        let orig = get(s:commands, k, [])
+        let conf += {'cmd': v, 'type': get(orig, -1, 'script')}
+        for i in orig
+          if i.cmd == v
+            let conf[-1].type = i.type
+            break
+          endif
+        endfor
+      elseif type(c) == 4
+        let conf += v
+      endif
+    endfor
+  elseif t == 4
+    let conf = [v]
+  endif
+  let conf += get(s:commands, k, [])
+  let s:commands[k] = conf
+endfor
 
 let s:position = get(g:, "easyrun_position", "bottom")
 let s:focus = get(g:, "easyrun_focus", 0)
@@ -128,7 +161,7 @@ endfunction
 
 function s:command(args, opts)
   let ft = &filetype
-  if !has_key(s:config, ft)
+  if !has_key(s:commands, ft)
     redraw
     echohl WarningMsg
     echomsg "Filetype \"" . ft . "\" is not supported."
@@ -137,7 +170,7 @@ function s:command(args, opts)
   endif
 
   let conf = {}
-  for c in s:config[ft]
+  for c in s:commands[ft]
     if executable(c.cmd)
     \  && (!has_key(c, 'dir')   || filereadable(expand(c.dir)))
     \  && (!has_key(c, 'updir') || findfile(c.updir, '.;'))
@@ -155,7 +188,11 @@ function s:command(args, opts)
     return ""
   endif
 
-  let cmd = join(s:types[conf.type], ' && ')
+  let t = conf.type
+  if type(t) == 1
+    let t = s:types[t]
+  endif
+  let cmd = join(t, ' && ')
   let cmd = substitute(cmd, "%c", conf.cmd, "g")
   let cmd = substitute(cmd, "%f", expand("%"), "g")
   let cmd = substitute(cmd, "%r", expand("%:r"), "g")

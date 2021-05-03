@@ -74,9 +74,21 @@ Compiler (or interpreter) options can passed with "+" prefix:
 =============================================================================
 CONFIGURATION                                         *easyrun-configuration*
 
-                                                           *g:easyrun_config*
-g:easyrun_config
-  |WIP|
+                                                         *g:easyrun_commands*
+g:easyrun_command
+  The dictionary to specify the command, execute format. This option supports
+  many formats, as below:
+
+>
+  let g:easyrun_command = {
+  \ 'python': 'python2',  " String parsed as [{'cmd':'python2', 'type': 'script'}]
+  \ 'c': {'cmd': 'c89', 'type':'cc'}, " Dictionary parsed as [{...}]
+  \ 'rust': [ " List. The upper item has the higher priority.
+  \   {'cmd': 'cargo', 'type': 'run', 'updir': 'Cargo.toml'},
+  \   'rustc',
+  \ ]
+  }
+<
 
                                                             *g:easyrun_types*
 g:easyrun_types
