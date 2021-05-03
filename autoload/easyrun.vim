@@ -1,9 +1,9 @@
 let s:is_win = has('win32') || has('win64')
 
 let s:types = {
-\ 'awk': 'awk',
-\ 'asm': s:is_win && executable('ml')                ? 'ml'        :
-\        s:is_win && executable('ml64')              ? 'ml64'      :
+\ 'awk': executable('awk') ? 'awk' : '',
+\ 'asm': s:is_win && executable('ml')                ? 'masm32'    :
+\        s:is_win && executable('ml64')              ? 'masm64'    :
 \        executable('yasm') && executable('lld')     ? 'yasm-lld'  :
 \        executable('yasm') && executable('ld')      ? 'yasm-ld'   :
 \        executable('yasm') && executable('ld.gold') ? 'yasm-gold' :
@@ -15,7 +15,7 @@ let s:types = {
 \        executable('as')   && executable('lld')     ? 'as-lld'    :
 \        executable('as')   && executable('ld')      ? 'as-ld'     :
 \        executable('as')   && executable('ld.gold') ? 'as-gold'   : '',
-\ 'bash': 'bash',
+\ 'bash': executable('bash') ? 'bash' : '',
 \ 'c': s:is_win && executable('cl') ? 'vc'    :
 \      executable('clang')          ? 'clang' :
 \      executable('gcc')            ? 'gcc'   :
@@ -27,31 +27,35 @@ let s:types = {
 \ 'cs':  filereadable(expand('*.csproj')) ? 'dotnet' :
 \        executable('csc')                ? 'csc' :
 \        executable('mcs')                ? 'mcs' : '',
-\ 'coffee': 'coffee',
-\ 'crystal': 'crystal',
+\ 'coffee': executable('coffee') ? 'coffee' : '',
+\ 'crystal': executable('crystal') ? 'crystal' : '',
 \ 'd': executable('rdmd') ? 'rdmd' :
 \      executable('ldc')  ? 'ldc'  :
 \      executable('gdc')  ? 'gdc'  : '',
-\ 'dart': 'dart',
-\ 'dosbatch': 'dosbatch',
-\ 'elixir': 'elixir',
-\ 'erlang': 'erlang',
-\ 'fish': 'fish',
-\ 'fortran': 'gfortran',
+\ 'dart': executable('dart') ? 'dart' : '',
+\ 'dosbatch': executable('cmd') ? 'dosbatch': '',
+\ 'elixir': executable('elixir') ? 'elixir' : '',
+\ 'erlang': executable('escript') ? 'erlang': '',
+\ 'fish': executable('fish') ? 'fish' : '',
+\ 'fortran': executable('gfortran') ? 'gfortran' : '',
 \ 'fsharp': filereadable(expand('*.fsproj')) ? 'dotnet' :
 \           executable('fsc')                ? 'fsc' :
 \           executable('fsharpc')            ? 'fsharpc' : '',
-\ 'go': 'go',
-\ 'groovy': 'groovy',
-\ 'python': 'python',
+\ 'go': executable('go')     ? 'go'     :
+\       executable('tinygo') ? 'tinygo' :
+\       executable('gccgo')  ? 'gccgo'  : '',
+\ 'groovy': executable('groovy') ? 'groovy' : '',
+\ 'haskell' !empty(findfile('stack.yaml', '.;')) ? 'stack' :
+\           executable('runghc')                 ? 'runghc' : '',
+\ 'python': executable('python') ? 'python' : '',
 \}
 
 call extend(s:types, get(g:, "easyrun_types", {}))
 
 let s:commands = {
 \ 'awk': ['awk %o %f %a'],
-\ 'ml': ['ml %o %f /nologo /Fo%r.obj /Fe%r.exe > nul', './%r.exe %a'],
-\ 'ml64': ['ml64 %o %f /nologo /Fo%r.obj /Fe%r.exe > nul', './%r.exe %a'],
+\ 'masm32': ['ml %o %f /nologo /Fo%r.obj /Fe%r.exe > nul', './%r.exe %a'],
+\ 'masm64': ['ml64 %o %f /nologo /Fo%r.obj /Fe%r.exe > nul', './%r.exe %a'],
 \ 'yasm-lld': s:is_win
 \               ? ['yasm -o %r.o %f', 'ld.lld %o -o %r.exe %r.o', './%r.exe %a']
 \               : ['yasm -o %r.o %f', 'ld.lld %o -o %r %r.o', './%r %a'],
@@ -130,7 +134,14 @@ let s:commands = {
 \ 'fsc': ['fsc %o /nologo /out:%r.exe', './%r.exe %a'],
 \ 'fsharpc': ['fsharpc %o -out:%r.exe', 'mono %r.exe %a'],
 \ 'go': ['go run %o %f -- %a'],
+\ 'tinygo': ['go run %o %f -- %a'],
+\ 'gccgo': ['gccgo %o -o %r %f', './%r %a'],
 \ 'groovy': ['groovy %o %f %a'],
+\ 'stack': ['stack run %o -- %a'],
+\ 'runghc': ['runghc %o %f %a'],
+\ 'runghc-dynamic': ['runghc -dynamic %o %f %a'],
+\ 'ghc': ['ghc %o -o %r %f', './%r %a'],
+\ 'ghc-dynamic': ['ghc -dynamic %o -o %r %f', './%r %a'],
 \ 'python': ['python %o %f %a'],
 \}
 

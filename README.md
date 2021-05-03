@@ -81,10 +81,18 @@ repo = 'watcol/easyrun.vim'
   - .NET Framework
   - Mono
 - Go
+  - Go
+  - TinyGo
+  - GCCGO
 - Groovy
+- Haskell
+  - Stack
+  - RunGHC
+  - GHC
 - Python
 
 **NOTE: If there are multiple tools in one language, upper tools has higer priority.**
+
 ## Usage
 Just call `EasyRun` command in vim:
 ```vim
