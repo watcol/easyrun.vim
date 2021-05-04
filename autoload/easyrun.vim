@@ -50,7 +50,7 @@ let s:commands = {
 \   {'cmd': 'c++',     'type': 'cc'},
 \ ],
 \ 'clojure': [
-\   {'cmd': 'jark',    'type': ['%c %o -e "((load-file \"%f\") %A)"']},
+\   {'cmd': 'jark',    'type': ['%c %o -e ''((load-file "%f") %A)''']},
 \   {'cmd': 'clojure', 'type': 'script'},
 \ ],
 \ 'cs': [
@@ -172,17 +172,37 @@ let s:commands = {
 \   {'cmd': 'rustc', 'type': 'cc'},
 \ ],
 \ 'scala': [
-\   {'cmd': 'sbt', 'type': 'run', 'updir': 'build.sbt'},
+\   {'cmd': 'sbt',    'type': 'run', 'updir': 'build.sbt'},
 \   {'cmd': 'gradle', 'type': 'gradle', 'updir': 'gradle.build'},
 \   {'cmd': 'scala',  'type': 'jvm'},
 \ ],
+\ 'scheme': [
+\   {'cmd': 'racket',      'type': 'script', 'ext': 'rkt'},
+\   {'cmd': 'gosh',        'type': 'script'},
+\   {'cmd': 'mzscheme',    'type': ['%c %o -f %f %a']},
+\   {'cmd': 'bigloo',      'type': ['%c %o -i %f %a']},
+\   {'cmd': 'chicken-csc', 'type': 'cc'},
+\   {'cmd': 'guile',       'type': 'script'},
+\ ],
 \ 'sed': [{'cmd': 'sed', 'type': 'script'}],
 \ 'sh': [{'cmd': 'sh', 'type': 'script'}],
+\ 'sql': [
+\   {'cmd': 'psql',    'type': ['%c %o -f %f']},
+\   {'cmd': 'mysql',   'type': ['%c %o < %f']},
+\   {'cmd': 'sqlite3', 'type': ['%c %o < %f']},
+\   {'cmd': 'sqlplus', 'type': ['%c %o \@%f']},
+\   {'cmd': 'sqlcmd',  'type': ['%c %o -i %f']},
+\ ],
 \ 'swift': [
 \   {'cmd': 'xcrun', 'type': ['%c swift %f']},
 \   {'cmd': 'swift', 'type': 'script'},
 \ ],
 \ 'tmux': [{'cmd': 'tmux', 'type': ['%c source-file %f']}],
+\ 'typescript': [
+\   {'cmd': 'ts-node', 'type': 'script'},
+\   {'cmd': 'deno', 'type': 'run-file'},
+\   {'cmd': 'tsc', 'type': ['%c %o %f', 'node %r.js']},
+\ ],
 \ 'wsh': [{'cmd': 'cscript', 'type': ['%c %o //Nologo %f %a']}],
 \ 'zig': [{'cmd': 'zig', 'type': 'run-file'}],
 \ 'zsh': [{'cmd': 'zsh', 'type': 'script'}],

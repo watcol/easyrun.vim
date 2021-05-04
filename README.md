@@ -145,6 +145,7 @@ repo = 'watcol/easyrun.vim'
 - XQuery
   - Zorba
 - R
+- Racket
 - Ruby
   - Ruby
   - mruby
@@ -156,10 +157,26 @@ repo = 'watcol/easyrun.vim'
   - sbt
   - Gradle
   - Scala
+- Scheme
+  - Gauche
+  - MzScheme
+  - Bigloo Scheme
+  - Chicken Scheme
+  - GNU Guile
 - Sed
 - Shell Script
+- SQL
+  - PostgreSQL
+  - MySQL
+  - SQLite3
+  - Oracle SQL\*Plus
+  - Microsoft SQL Server
 - Swift
 - tmux
+- TypeScript
+  - ts-node
+  - Deno
+  - TypeScript
 - Windows Script Host
 - Zig
 - Z Shell
