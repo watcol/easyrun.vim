@@ -24,6 +24,7 @@ let s:types = {
 call extend(s:types, get(g:, "easyrun_types", {}))
 
 let s:commands = {
+\ 'ada': [{'cmd': 'gnatmake', 'type': ['%c %o -o %r %f', './%r %a']}],
 \ 'awk': [{'cmd': 'awk', 'type': 'script'}],
 \ 'asm': [
 \   {'cmd': 'ml64', 'type': 'vc'},
@@ -36,6 +37,7 @@ let s:commands = {
 \   {'cmd': 'as', 'type': 'link'},
 \ ],
 \ 'bash': [{'cmd': 'bash', 'type': 'script'}],
+\ 'boo': [{'cmd': 'booc', 'type': 'mono'}],
 \ 'c': [
 \   {'cmd': 'cl',    'type': 'vc'},
 \   {'cmd': 'clang', 'type': 'cc'},
@@ -83,17 +85,19 @@ let s:commands = {
 \   {'cmd': 'gccgo',  'type': 'cc'},
 \ ],
 \ 'groovy': [{'cmd': 'groovy', 'type': 'script'}],
+\ 'hack': [{'cmd': 'hhvm', 'type': 'script'}],
 \ 'haskell': [
 \   {'cmd': 'stack',  'type': 'run', 'updir': 'stack.yaml'},
 \   {'cmd': 'runghc', 'type': 'script'},
 \   {'cmd': 'ghc',    'type': 'cc'},
 \ ],
+\ 'haxe': [{'cmd': 'haxe', 'type': ['%c %o -p %h --run %f %a']}],
 \ 'idris': [{'cmd': 'idris', 'type': 'cc'}],
 \ 'io': [{'cmd': 'io', 'type': 'script'}],
 \ 'java': [
 \   {'cmd': 'gradle', 'type': ['%c run --args="%a"'], 'updir': 'gradle.build'},
 \   {'cmd': 'java', 'type': 'jvm'}
-],
+\ ],
 \ 'javascript': [
 \   {'cmd': 'node',      'type': 'script'},
 \   {'cmd': 'deno',      'type': 'run-file'},
@@ -126,13 +130,13 @@ let s:commands = {
 \   {'cmd': 'redis-cli', 'type': ['%c %o --eval %f %a']},
 \ ],
 \ 'markdown': [
-\   {'cmd', 'Markdown.pl', 'type': 'script'},
-\   {'cmd', 'bluecloth',   'type': ['%c %o -f %f %a']},
-\   {'cmd', 'kramdown',    'type': 'script'},
-\   {'cmd', 'redcarpet',   'type': 'script'},
-\   {'cmd', 'pandoc',      'type': '%c --from=markdown --to=html %o %f %a'},
-\   {'cmd', 'markdown_py', 'type': 'script'},
-\   {'cmd', 'markdown',    'type': 'script'},
+\   {'cmd': 'Markdown.pl', 'type': 'script'},
+\   {'cmd': 'bluecloth',   'type': ['%c %o -f %f %a']},
+\   {'cmd': 'kramdown',    'type': 'script'},
+\   {'cmd': 'redcarpet',   'type': 'script'},
+\   {'cmd': 'pandoc',      'type': '%c --from=markdown --to=html %o %f %a'},
+\   {'cmd': 'markdown_py', 'type': 'script'},
+\   {'cmd': 'markdown',    'type': 'script'},
 \ ],
 \ 'nim': [{'cmd': 'nim', 'type': ['%c compile %o --run --verbosity:0 %f']}],
 \ 'ocaml': [{'cmd': 'ocaml', 'type': 'script'}],
@@ -147,6 +151,7 @@ let s:commands = {
 \ ],
 \ 'php': [{'cmd': 'php', 'type': 'script'}],
 \ 'pony': [{'cmd': 'ponyc', 'type': ['%c -V0 %o', './%d %a']}],
+\ 'processing': [{'cmd': 'processing-java', 'type': ['%c --sketch=%H --force --run']}],
 \ 'prolog': [
 \   {'cmd': 'swipl',   'type': ['%c %o --quiet -s %f %a -g halt']},
 \   {'cmd': 'gprolog', 'type': ['%c %o --consult-file %f %a --query-goal halt']},
@@ -156,12 +161,13 @@ let s:commands = {
 \   {'cmd': 'powershell', 'type': ['%c %o -File %s %a']},
 \ ],
 \ 'purescript': [
-\   {'cmd': 'spago', 'type', 'run', 'updir': 'spago.dhall'},
+\   {'cmd': 'spago', 'type': 'run', 'updir': 'spago.dhall'},
 \   {'cmd': 'pulp',  'type': 'run', 'updir': 'bower.json'},
 \   {'cmd': 'pulp',  'type': 'run', 'updir': 'psc-package.json'},
 \ ],
 \ 'xquery': [{'cmd': 'zorba', 'type': 'script'}],
 \ 'r': [{'cmd': 'R', 'type': ['%c %o --no-save --slave %a < %f']}],
+\ 'raku': [{'cmd': 'raku', 'type': 'script'}],
 \ 'ruby': [
 \   {'cmd': 'ruby',  'type': 'script'},
 \   {'cmd': 'mruby', 'type': 'script'},
@@ -202,6 +208,13 @@ let s:commands = {
 \   {'cmd': 'ts-node', 'type': 'script'},
 \   {'cmd': 'deno', 'type': 'run-file'},
 \   {'cmd': 'tsc', 'type': ['%c %o %f', 'node %r.js']},
+\ ],
+\ 'v': [{'cmd': 'v', 'type': 'run-file'}],
+\ 'vala': [{'cmd': 'vala', 'type': 'script'}],
+\ 'vb': [
+\   {'cmd': 'dotnet', 'type': 'run', 'dir': '*.vbproj'},
+\   {'cmd': 'vbc',    'type': 'dotnet-framework'},
+\   {'cmd': 'vbnc',    'type': 'mono'},
 \ ],
 \ 'wsh': [{'cmd': 'cscript', 'type': ['%c %o //Nologo %f %a']}],
 \ 'zig': [{'cmd': 'zig', 'type': 'run-file'}],

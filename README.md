@@ -29,6 +29,8 @@ repo = 'watcol/easyrun.vim'
 ```
 
 ## Supported Filetypes
+- Ada
+  - GNAT (GCC Ada)
 - AWK
   - awk
   - gawk (GNU awk)
@@ -45,6 +47,7 @@ repo = 'watcol/easyrun.vim'
   - ld (GNU linker) *(linker)*
   - GNU Gold *(linker)*
 - Bash
+- Boo
 - C
   - Visual C
   - GCC
@@ -85,10 +88,12 @@ repo = 'watcol/easyrun.vim'
   - TinyGo
   - GCCGO
 - Groovy
+- Hack
 - Haskell
   - Stack
   - runghc
   - GHC
+- Haxe
 - Idris
 - IO
 - Java
@@ -135,6 +140,7 @@ repo = 'watcol/easyrun.vim'
   - Jython
 - PHP
 - Pony
+- Processing
 - Prolog
   - SWI-Prolog
   - GNU Prolog
@@ -177,6 +183,11 @@ repo = 'watcol/easyrun.vim'
   - ts-node
   - Deno
   - TypeScript
+- V
+- Vala
+- Visual Basic .NET
+  - .NET
+  - .NET Framework
 - Windows Script Host
 - Zig
 - Z Shell
