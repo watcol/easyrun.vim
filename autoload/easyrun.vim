@@ -113,9 +113,33 @@ let s:commands = {
 \ 'lua': [
 \   {'cmd': 'luajit', 'type': 'script'},
 \   {'cmd': 'lua', 'type': 'script'},
-\   {'cmd': 'redis-cli', 'type': ['%c %o --eval %s %a']},
+\   {'cmd': 'lua5.4', 'type': 'script'},
+\   {'cmd': 'lua5.3', 'type': 'script'},
+\   {'cmd': 'lua5.2', 'type': 'script'},
+\   {'cmd': 'lua5.1', 'type': 'script'},
+\   {'cmd': 'redis-cli', 'type': ['%c %o --eval %f %a']},
 \ ],
-\ 'python': [{'cmd': 'python', 'type': 'script'}],
+\ 'markdown': [
+\   {'cmd', 'Markdown.pl', 'type': 'script'},
+\   {'cmd', 'bluecloth', 'type': ['%c %o -f %f %a']},
+\   {'cmd', 'kramdown', 'type': 'script'},
+\   {'cmd', 'redcarpet', 'type': 'script'},
+\   {'cmd', 'pandoc', 'type': '%c --from=markdown --to=html %o %f %a'},
+\   {'cmd', 'markdown_py', 'type': 'script'},
+\   {'cmd', 'markdown', 'type': 'script'},
+\ ],
+\ 'nim': [{'cmd': 'nim', 'type': ['%c compile %o --run --verbosity:0 %f']}],
+\ 'ocaml': [{'cmd': 'ocaml', 'type': 'script'}],
+\ 'perl': [{'cmd': 'perl', 'type': 'script'}],
+\ 'python': [
+\   {'cmd': 'python', 'type': 'script'},
+\   {'cmd': 'python3', 'type': 'script'},
+\   {'cmd': 'pypy', 'type': 'script'},
+\   {'cmd': 'nuitka3-run', 'type': 'script'},
+\   {'cmd': 'jython', 'type': 'script'},
+\   {'cmd': 'python2', 'type': 'script'},
+\ ],
+\ 'php': [{'cmd': 'php', 'type': 'script'}],
 \}
 
 for k in keys(get(g:, 'easyrun_commands', {}))

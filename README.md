@@ -112,7 +112,23 @@ repo = 'watcol/easyrun.vim'
   - LuaJIT
   - Lua
   - Redis
+- Markdown
+  - Markdown.pl
+  - bluecloth
+  - kramdown
+  - Redcarpet
+  - Pandoc
+  - Python-Markdown
+  - Discount
+- Nim
+- OCaml
+- Perl
 - Python
+  - CPython
+  - Pypy
+  - Nuitka
+  - Jython
+- PHP
 
 **NOTE: If there are multiple tools in one language, upper tools has higer priority.**
 
