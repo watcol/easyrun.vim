@@ -87,11 +87,31 @@ repo = 'watcol/easyrun.vim'
 - Groovy
 - Haskell
   - Stack
-  - RunGHC
+  - runghc
   - GHC
 - Idris
 - IO
 - Java
+- JavaScript
+  - Node.js
+  - Deno
+  - Rhino
+  - PhantomJS
+  - V8
+  - SpiderMonkey
+- JSX
+- Julia
+- Kotlin
+- Common Lisp
+  - Steal Bank Common Lisp
+  - Clozure CL
+  - GNU CLISP
+  - Embeddable Common Lisp
+- LLVM IR
+- Lua
+  - LuaJIT
+  - Lua
+  - Redis
 - Python
 
 **NOTE: If there are multiple tools in one language, upper tools has higer priority.**

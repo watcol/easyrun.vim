@@ -48,7 +48,7 @@ let s:commands = {
 \   {'cmd': 'c++',     'type': 'cc'},
 \ ],
 \ 'clojure': [
-\   {'cmd': 'jark',    'type': ['%c ns load %f']},
+\   {'cmd': 'jark',    'type': ['%c %o -e "((load-file \"%f\") %A)"']},
 \   {'cmd': 'clojure', 'type': 'script'},
 \ ],
 \ 'cs': [
@@ -89,6 +89,32 @@ let s:commands = {
 \ 'idris': [{'cmd': 'idris', 'type': 'cc'}],
 \ 'io': [{'cmd': 'io', 'type': 'script'}],
 \ 'java': [{'cmd': 'java', 'type': ['%cc %o -d %h %f', '%c -cp %h %T']}],
+\ 'javascript': [
+\   {'cmd': 'node', 'type': 'script'},
+\   {'cmd': 'deno', 'type': 'run-file'},
+\   {'cmd': 'rhino', 'type': 'script'},
+\   {'cmd': 'phantomjs', 'type': 'script'},
+\   {'cmd': 'd8', 'type': 'script'},
+\   {'cmd': 'js', 'type': 'script'},
+\ ],
+\ 'jsx': [{'cmd': 'jsx', 'type': ['%c --run %o %s %a']}],
+\ 'julia': [{'cmd':'julia', 'type': 'script'}],
+\ 'kotlin': [
+\   {'cmd': 'kotlinc', 'type': ['%c %o -script %f'], 'ext': 'kts'},
+\   {'cmd': 'kotlin', 'type': ['%cc %o -d %h %f', '%c -cp %h %TKt']},
+\ ],
+\ 'lisp': [
+\   {'cmd': 'sbcl', 'type': ['%c %o --script %f %a']},
+\   {'cmd': 'ccl', 'type': ['%c %o -l %f -e "(ccl:quit)"']},
+\   {'cmd': 'clisp', 'type': 'script'},
+\   {'cmd': 'ecl', 'type': ['%c %o --load %f -e "(quit)"']},
+\ ],
+\ 'llvm': [{'cmd': 'lli', 'type': 'script'}],
+\ 'lua': [
+\   {'cmd': 'luajit', 'type': 'script'},
+\   {'cmd': 'lua', 'type': 'script'},
+\   {'cmd': 'redis-cli', 'type': ['%c %o --eval %s %a']},
+\ ],
 \ 'python': [{'cmd': 'python', 'type': 'script'}],
 \}
 
@@ -179,6 +205,7 @@ function s:command(args, opts)
     if executable(c.cmd)
     \  && (!has_key(c, 'dir')   || filereadable(expand(c.dir)))
     \  && (!has_key(c, 'updir') || findfile(c.updir, '.;'))
+    \  && (!has_key(c, 'ext')   || c.ext == expand('%:e'))
       let conf = c
       break
     else
