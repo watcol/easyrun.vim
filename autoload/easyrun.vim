@@ -9,6 +9,8 @@ let s:types = {
 \ 'cc': s:is_win
 \         ? ['%c %o -o %r.exe %f', './%r.exe %a']
 \         : ['%c %o -o %r %f', './%r %a'],
+\ 'cc-cat-asm': ['%c %o -S %r.s %f', 'cat %r.s'],
+\ 'cc-cat-ir': ['%c %o -emit-llvm -S %r.ll %f', 'cat %r.ll'],
 \ 'link': s:is_win
 \         ? ['%c %o -o %r.o %f', s:linker . ' %o -o %r.exe', './%r.exe %a']
 \         : ['%c %o -o %r.o %f', s:linker . ' %o -o %r', './%r %a'],
@@ -190,6 +192,8 @@ function s:command(args, opts)
     echohl None
     return ""
   endif
+
+  echomsg "Using command \"" . conf.cmd . "\"."
 
   let t = conf.type
   if type(t) == 1
