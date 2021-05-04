@@ -102,7 +102,7 @@ g:easyrun_types
   %a         Script's arguments.
   %A         Script's arguments (each surrounded by doublequotes)
   %o         Compiler (or interpreter)'s options.
-  %A         Compiler (or interpreter)'s options. (each surrounded by doublequotes)
+  %O         Compiler (or interpreter)'s options. (each surrounded by doublequotes)
   %f         The filename for current buffer.
   %F         The filename for current buffer. (full path)
   %r         The filename for current buffer without extension.
