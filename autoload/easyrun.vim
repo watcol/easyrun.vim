@@ -17,6 +17,8 @@ let s:types = {
 \ 'vc': ['%c %o %f /nologo /Fo%r.obj /Fe%r.exe > nul', ''],
 \ 'dotnet-framework': ['%c %o /nologo /out:%r.exe', './%r.exe %a'],
 \ 'mono': ['%c %o -out:%r.exe', 'mono %r.exe %a'],
+\ 'jvm': ['%cc %o -d %h %f', '%c -cp %h %T'],
+\ 'gradle': ['%c run --args="%a"'],
 \}
 
 call extend(s:types, get(g:, "easyrun_types", {}))
@@ -88,58 +90,102 @@ let s:commands = {
 \ ],
 \ 'idris': [{'cmd': 'idris', 'type': 'cc'}],
 \ 'io': [{'cmd': 'io', 'type': 'script'}],
-\ 'java': [{'cmd': 'java', 'type': ['%cc %o -d %h %f', '%c -cp %h %T']}],
+\ 'java': [
+\   {'cmd': 'gradle', 'type': ['%c run --args="%a"'], 'updir': 'gradle.build'},
+\   {'cmd': 'java', 'type': 'jvm'}
+],
 \ 'javascript': [
-\   {'cmd': 'node', 'type': 'script'},
-\   {'cmd': 'deno', 'type': 'run-file'},
-\   {'cmd': 'rhino', 'type': 'script'},
+\   {'cmd': 'node',      'type': 'script'},
+\   {'cmd': 'deno',      'type': 'run-file'},
+\   {'cmd': 'rhino',     'type': 'script'},
 \   {'cmd': 'phantomjs', 'type': 'script'},
-\   {'cmd': 'd8', 'type': 'script'},
-\   {'cmd': 'js', 'type': 'script'},
+\   {'cmd': 'd8',        'type': 'script'},
+\   {'cmd': 'js',        'type': 'script'},
 \ ],
 \ 'jsx': [{'cmd': 'jsx', 'type': ['%c --run %o %s %a']}],
 \ 'julia': [{'cmd':'julia', 'type': 'script'}],
 \ 'kotlin': [
+\   {'cmd': 'gradle', 'type': ['%c run --args="%a"'], 'updir': 'gradle.build'},
 \   {'cmd': 'kotlinc', 'type': ['%c %o -script %f'], 'ext': 'kts'},
-\   {'cmd': 'kotlin', 'type': ['%cc %o -d %h %f', '%c -cp %h %TKt']},
+\   {'cmd': 'kotlin',  'type': ['%cc %o -d %h %f', '%c -cp %h %TKt']},
 \ ],
 \ 'lisp': [
-\   {'cmd': 'sbcl', 'type': ['%c %o --script %f %a']},
-\   {'cmd': 'ccl', 'type': ['%c %o -l %f -e "(ccl:quit)"']},
+\   {'cmd': 'sbcl',  'type': ['%c %o --script %f %a']},
+\   {'cmd': 'ccl',   'type': ['%c %o -l %f -e "(ccl:quit)"']},
 \   {'cmd': 'clisp', 'type': 'script'},
-\   {'cmd': 'ecl', 'type': ['%c %o --load %f -e "(quit)"']},
+\   {'cmd': 'ecl',   'type': ['%c %o --load %f -e "(quit)"']},
 \ ],
 \ 'llvm': [{'cmd': 'lli', 'type': 'script'}],
 \ 'lua': [
-\   {'cmd': 'luajit', 'type': 'script'},
-\   {'cmd': 'lua', 'type': 'script'},
-\   {'cmd': 'lua5.4', 'type': 'script'},
-\   {'cmd': 'lua5.3', 'type': 'script'},
-\   {'cmd': 'lua5.2', 'type': 'script'},
-\   {'cmd': 'lua5.1', 'type': 'script'},
+\   {'cmd': 'luajit',    'type': 'script'},
+\   {'cmd': 'lua',       'type': 'script'},
+\   {'cmd': 'lua5.4',    'type': 'script'},
+\   {'cmd': 'lua5.3',    'type': 'script'},
+\   {'cmd': 'lua5.2',    'type': 'script'},
+\   {'cmd': 'lua5.1',    'type': 'script'},
 \   {'cmd': 'redis-cli', 'type': ['%c %o --eval %f %a']},
 \ ],
 \ 'markdown': [
 \   {'cmd', 'Markdown.pl', 'type': 'script'},
-\   {'cmd', 'bluecloth', 'type': ['%c %o -f %f %a']},
-\   {'cmd', 'kramdown', 'type': 'script'},
-\   {'cmd', 'redcarpet', 'type': 'script'},
-\   {'cmd', 'pandoc', 'type': '%c --from=markdown --to=html %o %f %a'},
+\   {'cmd', 'bluecloth',   'type': ['%c %o -f %f %a']},
+\   {'cmd', 'kramdown',    'type': 'script'},
+\   {'cmd', 'redcarpet',   'type': 'script'},
+\   {'cmd', 'pandoc',      'type': '%c --from=markdown --to=html %o %f %a'},
 \   {'cmd', 'markdown_py', 'type': 'script'},
-\   {'cmd', 'markdown', 'type': 'script'},
+\   {'cmd', 'markdown',    'type': 'script'},
 \ ],
 \ 'nim': [{'cmd': 'nim', 'type': ['%c compile %o --run --verbosity:0 %f']}],
 \ 'ocaml': [{'cmd': 'ocaml', 'type': 'script'}],
 \ 'perl': [{'cmd': 'perl', 'type': 'script'}],
 \ 'python': [
-\   {'cmd': 'python', 'type': 'script'},
-\   {'cmd': 'python3', 'type': 'script'},
-\   {'cmd': 'pypy', 'type': 'script'},
+\   {'cmd': 'python',      'type': 'script'},
+\   {'cmd': 'python3',     'type': 'script'},
+\   {'cmd': 'pypy',        'type': 'script'},
 \   {'cmd': 'nuitka3-run', 'type': 'script'},
-\   {'cmd': 'jython', 'type': 'script'},
-\   {'cmd': 'python2', 'type': 'script'},
+\   {'cmd': 'jython',      'type': 'script'},
+\   {'cmd': 'python2',     'type': 'script'},
 \ ],
 \ 'php': [{'cmd': 'php', 'type': 'script'}],
+\ 'pony': [{'cmd': 'ponyc', 'type': ['%c -V0 %o', './%d %a']}],
+\ 'prolog': [
+\   {'cmd': 'swipl',   'type': ['%c %o --quiet -s %f %a -g halt']},
+\   {'cmd': 'gprolog', 'type': ['%c %o --consult-file %f %a --query-goal halt']},
+\ ],
+\ 'ps1': [
+\   {'cmd': 'pwsh',       'type': ['%c %o -File %s %a']},
+\   {'cmd': 'powershell', 'type': ['%c %o -File %s %a']},
+\ ],
+\ 'purescript': [
+\   {'cmd': 'spago', 'type', 'run', 'updir': 'spago.dhall'},
+\   {'cmd': 'pulp',  'type': 'run', 'updir': 'bower.json'},
+\   {'cmd': 'pulp',  'type': 'run', 'updir': 'psc-package.json'},
+\ ],
+\ 'xquery': [{'cmd': 'zorba', 'type': 'script'}],
+\ 'r': [{'cmd': 'R', 'type': ['%c %o --no-save --slave %a < %f']}],
+\ 'ruby': [
+\   {'cmd': 'ruby',  'type': 'script'},
+\   {'cmd': 'mruby', 'type': 'script'},
+\   {'cmd': 'jruby', 'type': 'script'},
+\ ],
+\ 'rust': [
+\   {'cmd': 'cargo', 'type': 'run', 'updir': 'Cargo.toml'},
+\   {'cmd': 'rustc', 'type': 'cc'},
+\ ],
+\ 'scala': [
+\   {'cmd': 'sbt', 'type': 'run', 'updir': 'build.sbt'},
+\   {'cmd': 'gradle', 'type': 'gradle', 'updir': 'gradle.build'},
+\   {'cmd': 'scala',  'type': 'jvm'},
+\ ],
+\ 'sed': [{'cmd': 'sed', 'type': 'script'}],
+\ 'sh': [{'cmd': 'sh', 'type': 'script'}],
+\ 'swift': [
+\   {'cmd': 'xcrun', 'type': ['%c swift %f']},
+\   {'cmd': 'swift', 'type': 'script'},
+\ ],
+\ 'tmux': [{'cmd': 'tmux', 'type': ['%c source-file %f']}],
+\ 'wsh': [{'cmd': 'cscript', 'type': ['%c %o //Nologo %f %a']}],
+\ 'zig': [{'cmd': 'zig', 'type': 'run-file'}],
+\ 'zsh': [{'cmd': 'zsh', 'type': 'script'}],
 \}
 
 for k in keys(get(g:, 'easyrun_commands', {}))
@@ -261,6 +307,7 @@ function s:command(args, opts)
   let cmd = substitute(cmd, "%R", expand("%:p:r"), "g")
   let cmd = substitute(cmd, "%h", expand("%:h"), "g")
   let cmd = substitute(cmd, "%H", expand("%:p:h"), "g")
+  let cmd = substitute(cmd, "%d", expand("%:p:h:t"), "g")
   let cmd = substitute(cmd, "%t", expand("%:t"), "g")
   let cmd = substitute(cmd, "%T", expand("%:t:r"), "g")
   let qargs = []

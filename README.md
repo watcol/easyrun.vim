@@ -92,6 +92,8 @@ repo = 'watcol/easyrun.vim'
 - Idris
 - IO
 - Java
+  - Gradle
+  - Java
 - JavaScript
   - Node.js
   - Deno
@@ -102,6 +104,9 @@ repo = 'watcol/easyrun.vim'
 - JSX
 - Julia
 - Kotlin
+  - Gradle
+  - Kotlin Script
+  - Kotlin
 - Common Lisp
   - Steal Bank Common Lisp
   - Clozure CL
@@ -129,6 +134,35 @@ repo = 'watcol/easyrun.vim'
   - Nuitka
   - Jython
 - PHP
+- Pony
+- Prolog
+  - SWI-Prolog
+  - GNU Prolog
+- PowerShell
+- PureScript
+  - Spago
+  - Pulp
+- XQuery
+  - Zorba
+- R
+- Ruby
+  - Ruby
+  - mruby
+  - Jruby
+- Rust
+  - Cargo
+  - rustc
+- Scala
+  - sbt
+  - Gradle
+  - Scala
+- Sed
+- Shell Script
+- Swift
+- tmux
+- Windows Script Host
+- Zig
+- Z Shell
 
 **NOTE: If there are multiple tools in one language, upper tools has higer priority.**
 

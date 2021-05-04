@@ -109,6 +109,7 @@ g:easyrun_types
   %R         The filename for current buffer without extension. (full path)
   %h         The directory for current buffer.
   %H         The directory for current buffer. (full path)
+  %d         The directory name for current buffer.
   %t         The filename without directory path.
   %T         The filename without directory path and extensions.
 
